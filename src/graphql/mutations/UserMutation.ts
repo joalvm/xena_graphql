@@ -1,16 +1,11 @@
-import { UserType } from '../types'
+import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLBoolean } from 'graphql'
 import { getCustomRepository } from 'typeorm-plus'
-import { GraphQLNonNull, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLBoolean } from 'graphql'
-import UserRepository from '../../repositories/UserRepository'
-import UserInput from '../inputs/UserInput'
-import UserSessionRepository from '../../repositories/UserSessionRepository'
+import { UserType } from '../types'
 import { Request } from 'express'
-import { Users } from '../../interfaces/Users'
-
-interface UserAttribute {
-  username: string
-  password: string
-}
+import { User } from '../../interfaces'
+import UserInput from '../inputs/UserInput'
+import UserRepository from '../../repositories/UserRepository'
+import UserSessionRepository from '../../repositories/UserSessionRepository'
 
 interface Login {
   username: string
@@ -27,7 +22,7 @@ export default {
         type: UserInput(),
       },
     },
-    resolve(_: any, { body }: { body: Users }) {
+    resolve(_: any, { body }: { body: User }) {
       return getCustomRepository(UserRepository).save(body)
     },
   },

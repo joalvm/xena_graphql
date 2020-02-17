@@ -1,2 +1,2 @@
-export { default as Gender } from './Genders'
+export { default as Genders } from './Genders'
 export { default as MaritalStatus } from './MaritalStatus'

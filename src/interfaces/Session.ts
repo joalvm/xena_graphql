@@ -1,4 +1,4 @@
-export default interface SessionInterface {
+export default interface Session {
   token: string,
   expire: string,
   ip: string,

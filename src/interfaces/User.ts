@@ -1,6 +1,6 @@
 import { Genders } from '../enums/Genders'
 
-export interface Users {
+export default interface User {
   username: string
   password: string
   salt: string

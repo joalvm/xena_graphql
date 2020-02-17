@@ -2,7 +2,7 @@ import { EntityRepository, AbstractRepository } from 'typeorm-plus'
 import { Users as UserEntity } from '../entities/Users'
 import { hashSync } from 'bcrypt'
 import { random } from '../helpers'
-import { Users as UserInterface } from 'src/interfaces/Users'
+import { User } from 'src/interfaces'
 
 @EntityRepository(UserEntity)
 export default class UserRepository extends AbstractRepository<UserEntity> {
@@ -10,7 +10,11 @@ export default class UserRepository extends AbstractRepository<UserEntity> {
     super()
   }
 
-  async save(body: UserInterface): Promise<UserEntity> {
+  async all(): Promise<UserEntity[]> {
+    return await this.repository.find();
+  }
+
+  async save(body: User): Promise<UserEntity> {
     const entity = this.repository.create()
 
     entity.name = body.name

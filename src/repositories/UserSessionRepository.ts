@@ -1,6 +1,6 @@
-import { AbstractRepository, EntityRepository, getRepository } from 'typeorm-plus'
+import { AbstractRepository, EntityRepository, getRepository, Repository } from 'typeorm-plus'
 import {UsersSessions as UserSessionEntity} from '../entities/UsersSessions'
-import { SessionInterface } from '../interfaces'
+import { Session } from '../interfaces'
 import { fill } from '../helpers'
 import {Users as UserEntity} from '../entities/Users'
 import Unauthorized from '../exceptions/Unauthorized'
@@ -28,7 +28,7 @@ export default class UserSessionRepository extends AbstractRepository<UserSessio
     return await this.repository.findOne(id)
   }
 
-  async save(user: UserEntity, data: SessionInterface): Promise<UserSessionEntity> {
+  async save(user: UserEntity, data: Session): Promise<UserSessionEntity> {
     const entity = this.repository.create()
 
     fill(entity, data)
@@ -39,8 +39,37 @@ export default class UserSessionRepository extends AbstractRepository<UserSessio
   }
 
   async login(username: string, password: string, remember_me: boolean, agent: object) {
-    const entity = this.repository.create()
-    const user = await getRepository(UserEntity).findOne({where: { username: username }})
+
+    const user: UserEntity = this.validateUser(username, password)
+    const entity: UserSessionEntity = this.generateSession(user, agent)
+
+    const token: string = sign(
+      {
+        kid: entity.id,
+        uid: user.id,
+        adm: user.isAdmin,
+        exp: entity.expire
+      },
+      config('app.key'),
+      !remember_me ? { expiresIn: entity.expire.getSeconds() } : {}
+    )
+
+    await this.repository.update({ id: entity.expire.getSeconds() }, entity)
+
+    return {
+      id: entity.id,
+      userId: user.id,
+      token: token,
+      expireIn: entity.expire.getSeconds()
+    }
+  }
+
+  private validateUser(username: string, password: string): UserEntity {
+    let user: UserEntity|undefined;
+
+    (async (_u) => {
+      return getRepository(UserEntity).findOne({where: { username: _u }})
+    })(username).then(value => user = value)
 
     if (!user) {
       throw new Unauthorized('Username/Password incorrect')
@@ -50,6 +79,11 @@ export default class UserSessionRepository extends AbstractRepository<UserSessio
       throw new Unauthorized('Username/Password incorrect')
     }
 
+    return user
+  }
+
+  private generateSession(user: UserEntity, agent: Object): UserSessionEntity {
+    let entity = this.repository.create()
     const expireIn: number = this.expire()
     const data = {
       ...agent,
@@ -62,29 +96,11 @@ export default class UserSessionRepository extends AbstractRepository<UserSessio
 
     fill(entity, data)
 
-    await this.repository.save(entity)
+    (async (_e: UserSessionEntity) => {
+      return await this.repository.save(_e)
+    })(entity).bind(this)
 
-    const token: string = sign(
-      {
-        kid: entity.id,
-        uid: user.id,
-        adm: user.isAdmin,
-        exp: expireIn
-      },
-      config('app.key'),
-      !remember_me ? { expiresIn: expireIn } : {}
-    )
-
-    entity.token
-
-    await this.repository.update({ id: entity.id }, entity)
-
-    return {
-      id: entity.id,
-      userId: user.id,
-      token: token,
-      expireIn: expireIn
-    }
+    return entity;
   }
 
   private expire(): number {

@@ -1,20 +1,25 @@
 import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLBoolean } from 'graphql'
-import EmployeeType from './EmployeeType'
 import { resolveMeta } from '../../helpers'
+import GenderEnum from '../enums/Genders'
 
 const UserType = new GraphQLObjectType({
   name: 'User',
   description: '',
   fields: () => ({
     id: { type: GraphQLInt },
-    employee: { type: EmployeeType },
+    name: { type: GraphQLString },
+    lastname: { type: GraphQLString },
+    gender: {type: GenderEnum },
+    email: { type: GraphQLString },
+    avatarUrl: { type: GraphQLString },
     username: { type: GraphQLString },
-    salt: { type: GraphQLString },
     password: { type: GraphQLString },
-    recovery_password: { type: GraphQLString },
+    salt: { type: GraphQLString },
+    isAdmin: { type: GraphQLBoolean },
     enabled: { type: GraphQLBoolean },
-    created_at: { type: GraphQLString, resolve: resolveMeta('created_at') },
-    updated_at: { type: GraphQLString, resolve: resolveMeta('updated_at') },
+    recoveryPassword: { type: GraphQLString },
+    createdAt: { type: GraphQLString, resolve: resolveMeta('createdAt') },
+    updatedAt: { type: GraphQLString, resolve: resolveMeta('updatedAt') },
   }),
 })
 
