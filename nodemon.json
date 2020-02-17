@@ -1,0 +1,18 @@
+{
+  "watch": [
+    "src/config",
+    "src/entities",
+    "src/exceptions",
+    "src/graphql/**/*.ts",
+    "src/helpers",
+    "src/loaders",
+    "src/repositories",
+    "src/server.ts",
+    ".env"
+  ],
+  "ext": "js,ts,json,gql",
+  "ignore": [
+    "src/**/*.spec.ts"
+  ],
+  "exec": "ts-node --transpile-only src/server.ts"
+}
