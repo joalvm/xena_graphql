@@ -3,8 +3,8 @@ import { GraphQLEnumType } from 'graphql'
 const GenderEnum = new GraphQLEnumType({
   name: 'Gender',
   values: {
-    FEMALE: { value: 'f' },
-    MALE: { value: 'm' }
+    FEMALE: { value: 'FEMENINO' },
+    MALE: { value: 'MASCULINO' }
   }
 })
 

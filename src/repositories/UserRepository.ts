@@ -1,8 +1,8 @@
-import { EntityRepository, AbstractRepository, getCustomRepository } from 'typeorm-plus'
-import UserEntity from '../entities/UserEntity'
-import {hashSync} from 'bcrypt'
+import { EntityRepository, AbstractRepository } from 'typeorm-plus'
+import { Users as UserEntity } from '../entities/Users'
+import { hashSync } from 'bcrypt'
 import { random } from '../helpers'
-import EmployeeRepository from './EmployeeRepository'
+import { Users as UserInterface } from 'src/interfaces/Users'
 
 @EntityRepository(UserEntity)
 export default class UserRepository extends AbstractRepository<UserEntity> {
@@ -10,13 +10,21 @@ export default class UserRepository extends AbstractRepository<UserEntity> {
     super()
   }
 
-  async save(employeeId: number, username: string, password: string): Promise<UserEntity> {
+  async save(body: UserInterface): Promise<UserEntity> {
     const entity = this.repository.create()
 
+    entity.name = body.name
+    entity.lastname = body.lastname
+    entity.gender = body.gender
+    entity.email = body.email
+    entity.avatarUrl = body.avatar_url || null
+
+    // Session
     entity.salt = random(16)
-    entity.employee = await getCustomRepository(EmployeeRepository).find(employeeId)
-    entity.username = username
-    entity.password = hashSync(`${entity.salt}:${password}`, 12)
+    entity.username = body.username
+    entity.password = hashSync(`${entity.salt}:${body.password}`, 12)
+    entity.isAdmin = false
+    entity.enabled = true
 
     return await this.repository.save(entity)
   }

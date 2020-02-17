@@ -9,7 +9,7 @@ const UserType = new GraphQLObjectType({
     id: { type: GraphQLInt },
     employee: { type: EmployeeType },
     username: { type: GraphQLString },
-    password_hash: { type: GraphQLString },
+    salt: { type: GraphQLString },
     password: { type: GraphQLString },
     recovery_password: { type: GraphQLString },
     enabled: { type: GraphQLBoolean },

@@ -1,8 +1,8 @@
 import { AbstractRepository, EntityRepository, getRepository } from 'typeorm-plus'
-import UserSessionEntity from '../entities/UserSessionEntity'
+import {UsersSessions as UserSessionEntity} from '../entities/UsersSessions'
 import { SessionInterface } from '../interfaces'
 import { fill } from '../helpers'
-import UserEntity from '../entities/UserEntity'
+import {Users as UserEntity} from '../entities/Users'
 import Unauthorized from '../exceptions/Unauthorized'
 import { compareSync } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
@@ -68,7 +68,7 @@ export default class UserSessionRepository extends AbstractRepository<UserSessio
       {
         kid: entity.id,
         uid: user.id,
-        adm: user.is_admin,
+        adm: user.isAdmin,
         exp: expireIn
       },
       config('app.key'),
@@ -83,7 +83,6 @@ export default class UserSessionRepository extends AbstractRepository<UserSessio
       id: entity.id,
       userId: user.id,
       token: token,
-      employeeId: user.employee?.id,
       expireIn: expireIn
     }
   }

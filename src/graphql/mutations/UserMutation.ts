@@ -5,15 +5,11 @@ import UserRepository from '../../repositories/UserRepository'
 import UserInput from '../inputs/UserInput'
 import UserSessionRepository from '../../repositories/UserSessionRepository'
 import { Request } from 'express'
+import { Users } from '../../interfaces/Users'
 
 interface UserAttribute {
   username: string
   password: string
-}
-
-interface UserParam {
-  employeeId: number
-  attributes: UserAttribute
 }
 
 interface Login {
@@ -27,13 +23,12 @@ export default {
     type: UserType,
     description: 'Asigna un usuario a un empleado',
     args: {
-      employeeId: { type: GraphQLInt },
-      attributes: {
-        type: new GraphQLNonNull(UserInput),
+      body: {
+        type: UserInput(),
       },
     },
-    resolve(_: any, { employeeId, attributes }: UserParam) {
-      return getCustomRepository(UserRepository).save(employeeId, attributes.username, attributes.password)
+    resolve(_: any, { body }: { body: Users }) {
+      return getCustomRepository(UserRepository).save(body)
     },
   },
   login: {
@@ -56,17 +51,12 @@ export default {
     resolve(_: any, { username, password, rememberMe }: Login, context: Request) {
       const repository = getCustomRepository(UserSessionRepository)
 
-      return repository.login(
-        username,
-        password,
-        rememberMe,
-        {
-          ip: context.ip,
-          browser: context.useragent?.browser,
-          version: context.useragent?.version,
-          platform: context.useragent?.os
-        }
-      )
+      return repository.login(username, password, rememberMe, {
+        ip: context.ip,
+        browser: context.useragent?.browser,
+        version: context.useragent?.version,
+        platform: context.useragent?.os,
+      })
     },
   },
 }

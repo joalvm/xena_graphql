@@ -12,8 +12,7 @@ export default function(isSave = true) {
       lastname: { type: isSave ? new GraphQLNonNull(GraphQLString) : GraphQLString },
       gender: { type: isSave ? new GraphQLNonNull(GenderEnum) : GenderEnum },
       email: { type: GraphQLString },
-      company: { type: isSave ? new GraphQLNonNull(GraphQLInt) : GraphQLInt },
-      user: { type: UserInput }
+      company: { type: isSave ? new GraphQLNonNull(GraphQLInt) : GraphQLInt }
     }),
   })
 }

@@ -1,6 +1,6 @@
 import { EntityRepository, AbstractRepository } from 'typeorm-plus'
 import {EmployeeInterface} from '../interfaces'
-import EmployeeEntity from '../entities/EmployeeEntity'
+import {Employees as EmployeeEntity} from '../entities/Employees'
 import { fill } from '../helpers'
 
 @EntityRepository(EmployeeEntity)

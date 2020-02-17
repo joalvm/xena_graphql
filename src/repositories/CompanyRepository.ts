@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { EntityRepository, AbstractRepository } from 'typeorm-plus'
-import CompaniesEntity from '../entities/CompanyEntity'
+import {Companies as CompaniesEntity} from '../entities/Companies'
 import { CompanyInterface } from '../interfaces'
 import { fill } from '../helpers'
 
