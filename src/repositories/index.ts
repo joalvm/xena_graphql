@@ -1,6 +1,7 @@
-export {default as DocumentTypes} from './DocumentTypes'
-export {default as Persons} from './Persons'
-export {default as Users} from './Users'
-export {default as UserSessions} from './UserSessions'
-
-
+export { default as Users } from './Users'
+export { default as UserSessions } from './UserSessions'
+export { default as DocumentTypes } from './DocumentTypes'
+export { default as Departments } from './Departments'
+export { default as Provinces } from './Provinces'
+export { default as Districts } from './Districts'
+export { default as Persons } from './Persons'

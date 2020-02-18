@@ -1,2 +1,5 @@
 export { default as Users } from './Users'
 export { default as DocumentTypes } from './DocumentTypes'
+export { default as Departments } from './Departments'
+export { default as Provinces } from './Provinces'
+export { default as Districts } from './Districts'
