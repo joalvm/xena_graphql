@@ -1,1 +1,2 @@
-export { default as UserQuery } from './UserQuery'
+export { default as Users } from './Users'
+export { default as DocumentTypes } from './DocumentTypes'

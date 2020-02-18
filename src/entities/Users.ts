@@ -1,4 +1,14 @@
-import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm-plus'
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm-plus'
 import { Companies } from './Companies'
 import { CostCenters } from './CostCenters'
 import { OrganizationalUnits } from './OrganizationalUnits'
@@ -61,17 +71,26 @@ export class Users extends BaseEntity {
   })
   avatarUrl!: string | null
 
-  @Column('timestamp with time zone', {
+  @CreateDateColumn({
+    type: 'timestamp with time zone',
     name: 'created_at',
     nullable: true,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date | null
 
-  @Column('timestamp with time zone', { name: 'updated_at', nullable: true })
+  @UpdateDateColumn({
+    type: 'timestamp with time zone',
+    name: 'updated_at',
+    nullable: true,
+  })
   updatedAt!: Date | null
 
-  @Column('timestamp with time zone', { name: 'deleted_at', nullable: true })
+  @DeleteDateColumn({
+    type: 'timestamp with time zone',
+    name: 'deleted_at',
+    nullable: true,
+  })
   deletedAt!: Date | null
 
   @OneToMany(

@@ -1,2 +1,3 @@
-export { default as CompanyType } from './CompanyType'
-export { default as UserType } from './UserType'
+export { default as Company } from './Company'
+export { default as User } from './User'
+export { default as DocumentType } from './DocumentType'

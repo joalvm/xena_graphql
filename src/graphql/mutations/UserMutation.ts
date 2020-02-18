@@ -1,11 +1,10 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLBoolean } from 'graphql'
+import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLBoolean, GraphQLNonNull } from 'graphql'
+import { Users as UsersRepository, UserSessions as UserSessionRepository } from '../../repositories'
 import { getCustomRepository } from 'typeorm-plus'
-import { UserType } from '../types'
+import { User as UserType } from '../types'
 import { Request } from 'express'
 import { User } from '../../interfaces'
 import UserInput from '../inputs/UserInput'
-import UserRepository from '../../repositories/UserRepository'
-import UserSessionRepository from '../../repositories/UserSessionRepository'
 
 interface Login {
   username: string
@@ -23,7 +22,30 @@ export default {
       },
     },
     resolve(_: any, { body }: { body: User }) {
-      return getCustomRepository(UserRepository).save(body)
+      return getCustomRepository(UsersRepository).save(body)
+    },
+  },
+  editUser: {
+    type: UserType,
+    description: 'Editar un usuario',
+    args: {
+      id: { type: new GraphQLNonNull(GraphQLInt) },
+      body: {
+        type: UserInput(false),
+      },
+    },
+    resolve(_: any, { id, body }: { id: number; body: User }) {
+      return getCustomRepository(UsersRepository).update(id, body)
+    },
+  },
+  deleteUser: {
+    type: GraphQLBoolean,
+    description: 'Eliminar un usuario',
+    args: {
+      id: { type: new GraphQLNonNull(GraphQLInt) },
+    },
+    resolve(_: any, { id }: { id: number }) {
+      return getCustomRepository(UsersRepository).delete(id)
     },
   },
   login: {
@@ -44,9 +66,7 @@ export default {
       rememberMe: { type: GraphQLBoolean },
     },
     resolve(_: any, { username, password, rememberMe }: Login, context: Request) {
-      const repository = getCustomRepository(UserSessionRepository)
-
-      return repository.login(username, password, rememberMe, {
+      return getCustomRepository(UserSessionRepository).login(username, password, rememberMe, {
         ip: context.ip,
         browser: context.useragent?.browser,
         version: context.useragent?.version,

@@ -7,11 +7,15 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm-plus'
 import { Employees } from './Employees'
 import { Districts } from './Districts'
 import { DocumentTypes } from './DocumentTypes'
 import { Users } from './Users'
+import { MaritalStatus, Genders } from '../enums'
 
 @Index('persons_pkey', ['id'], { unique: true })
 @Entity('persons', { schema: 'public' })
@@ -30,14 +34,14 @@ export class Persons extends BaseEntity {
   @Column('character varying', { name: 'lastname', length: 80 })
   lastname!: string
 
-  @Column('enum', { name: 'gender', enum: ['MASCULINO', 'FEMENINO'] })
-  gender!: 'MASCULINO' | 'FEMENINO'
+  @Column('enum', { name: 'gender', enum: Genders })
+  gender!: keyof typeof Genders
 
   @Column('enum', {
     name: 'marital_status',
-    enum: ['NO_ESPECIFICADO', 'SOLTERO', 'CASADO', 'CONVIVIENTE', 'DIVORCIADO', 'VIUDO'],
+    enum: MaritalStatus,
   })
-  maritalStatus!: 'NO_ESPECIFICADO' | 'SOLTERO' | 'CASADO' | 'CONVIVIENTE' | 'DIVORCIADO' | 'VIUDO'
+  maritalStatus!: keyof typeof MaritalStatus
 
   @Column('character varying', { name: 'document_number', length: 20 })
   documentNumber!: string
@@ -57,17 +61,26 @@ export class Persons extends BaseEntity {
   @Column('character varying', { name: 'email', nullable: true, length: 80 })
   email!: string | null
 
-  @Column('timestamp with time zone', {
+  @CreateDateColumn({
+    type: 'timestamp with time zone',
     name: 'created_at',
     nullable: true,
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date | null
 
-  @Column('timestamp with time zone', { name: 'updated_at', nullable: true })
+  @UpdateDateColumn({
+    type: 'timestamp with time zone',
+    name: 'updated_at',
+    nullable: true
+  })
   updatedAt!: Date | null
 
-  @Column('timestamp with time zone', { name: 'deleted_at', nullable: true })
+  @DeleteDateColumn({
+    type: 'timestamp with time zone',
+    name: 'deleted_at',
+    nullable: true
+  })
   deletedAt!: Date | null
 
   @OneToMany(
