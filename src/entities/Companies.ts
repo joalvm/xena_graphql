@@ -20,6 +20,9 @@ export class Companies extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "integer", name: "id" })
   id!: number;
 
+  @Column('int4', { name: "users_id" })
+  userId!: number;
+
   @Column("character varying", { name: "name", length: 80 })
   name!: string;
 
