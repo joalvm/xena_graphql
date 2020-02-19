@@ -15,36 +15,47 @@ import { Departments } from './Departments'
 @Entity('provinces', { schema: 'public' })
 export class Provinces extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
-  id: number
+  id!: number
 
   @Column('character varying', { name: 'name', length: 80 })
-  name: string
+  name!: string
+
+  @Column('char', { name: 'code', length: 4 })
+  code!: string
 
   @Column('timestamp with time zone', {
     name: 'created_at',
     nullable: true,
     default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt: Date | null
+  createdAt!: Date | null
 
   @Column('timestamp with time zone', { name: 'updated_at', nullable: true })
-  updatedAt: Date | null
+  updatedAt!: Date | null
 
   @Column('timestamp with time zone', { name: 'deleted_at', nullable: true })
-  deletedAt: Date | null
+  deletedAt!: Date | null
 
   @OneToMany(
     () => Districts,
     districts => districts.province
   )
-  districts: Districts[]
+  districts!: Districts[]
 
   @ManyToOne(
     () => Departments,
     departments => departments.provinces
   )
-  @JoinColumn([{ name: 'department_id', referencedColumnName: 'id' }])
-  department: Departments
+  @JoinColumn([
+    {
+      name: 'department_id',
+      referencedColumnName: 'id',
+    },
+  ])
+  department!: Departments
+
+  @Column('int4', {name: 'department_id'})
+  departmentId!: number;
 
   constructor(init?: Partial<Provinces>) {
     super()

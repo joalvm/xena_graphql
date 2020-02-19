@@ -8,7 +8,7 @@ const type: GraphQLObjectType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLInt },
         name: { type: GraphQLString },
-        ubigeo: { type: GraphQLString },
+        code: { type: GraphQLString },
         province: { type: ProvinceType },
         createdAt: { type: GraphQLString, resolve: resolveMeta('createdAt') },
         updatedAt: { type: GraphQLString, resolve: resolveMeta('updatedAt') },

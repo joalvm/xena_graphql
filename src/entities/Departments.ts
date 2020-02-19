@@ -15,6 +15,9 @@ export class Departments extends BaseEntity {
   @Column('character varying', { name: 'name', length: 80 })
   name!: string
 
+  @Column('char', { name: 'code', length: 2 })
+  code!: string
+
   @Column('timestamp with time zone', {
     name: 'created_at',
     nullable: true,

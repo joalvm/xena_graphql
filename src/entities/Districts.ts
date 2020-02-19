@@ -25,8 +25,8 @@ export class Districts extends BaseEntity {
   @Column('character varying', { name: 'name', length: 80 })
   name!: string
 
-  @Column('character', { name: 'ubigeo', length: 6 })
-  ubigeo!: string
+  @Column('character', { name: 'code', length: 6 })
+  code!: string
 
   @Column('timestamp with time zone', {
     name: 'created_at',

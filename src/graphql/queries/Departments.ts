@@ -1,13 +1,14 @@
 import { GraphQLList, GraphQLInt, GraphQLNonNull } from 'graphql'
 import { getCustomRepository } from 'typeorm-plus'
 import { Department as DepartmentType } from '../types'
+import { Departments as DepartmentsRepository } from '../../repositories'
 
 export default {
   listDepartments: {
     type: new GraphQLList(DepartmentType),
     description: 'Lista de departamentos',
     resolve() {
-      return []
+      return getCustomRepository(DepartmentsRepository).all()
     },
   },
   findDepartment: {
@@ -17,7 +18,7 @@ export default {
       id: { type: new GraphQLNonNull(GraphQLInt) },
     },
     resolve(_: any, { id }: { id: number }) {
-      return null
+        return getCustomRepository(DepartmentsRepository).find(id)
     },
   },
 }

@@ -1,6 +1,7 @@
 import { GraphQLList, GraphQLInt, GraphQLNonNull } from 'graphql'
 import { getCustomRepository } from 'typeorm-plus'
 import { Province as ProvinceType } from '../types'
+import { Provinces as ProvincesRepository } from '../../repositories'
 
 export default {
     listProvinces: {
@@ -10,7 +11,7 @@ export default {
         },
         description: 'Lista de Provincias',
         resolve() {
-            return []
+            return getCustomRepository(ProvincesRepository).all()
         },
     },
     findProvince: {
