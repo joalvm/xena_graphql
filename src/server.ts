@@ -13,7 +13,7 @@ setMaxListeners(200);
   await loaders(server);
 
   server.listen(config('app.port'), () => {
-    console.log('server in port '+config('app.port'))
+    console.log('server in port ', config('app.port'))
   })
 })()
 

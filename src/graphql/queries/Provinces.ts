@@ -10,8 +10,11 @@ export default {
             department: { type: GraphQLInt }
         },
         description: 'Lista de Provincias',
-        resolve() {
-            return getCustomRepository(ProvincesRepository).all()
+        resolve(_: any, { department }: { department: number }) {
+            const repository = getCustomRepository(ProvincesRepository)
+            return !department
+                ? repository.all()
+                : repository.findByDepartment([department])
         },
     },
     findProvince: {
@@ -21,7 +24,7 @@ export default {
             id: { type: new GraphQLNonNull(GraphQLInt) },
         },
         resolve(_: any, { id }: { id: number }) {
-            return null
+            return getCustomRepository(ProvincesRepository).find(id)
         },
     },
 }

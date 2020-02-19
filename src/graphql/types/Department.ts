@@ -5,6 +5,7 @@ import { getCustomRepository } from 'typeorm-plus'
 import { Provinces as ProvincesRepository } from '../../repositories'
 import dataloader from 'dataloader'
 import {groupBy, map} from 'lodash'
+import { Provinces as ProvincesEntity } from '../../entities/Provinces'
 
 const ProvincesDL = new dataloader(
     async (keys) => {
@@ -13,7 +14,7 @@ const ProvincesDL = new dataloader(
         const data = await getCustomRepository(ProvincesRepository)
             .findByDepartment(departmentIds)
 
-        const group = groupBy(data, item => item.department.id)
+        const group = groupBy(data, (item: ProvincesEntity)  => item.departmentId)
 
         return map(departmentIds, (departmentId: number) => group[departmentId]);
     }

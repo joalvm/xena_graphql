@@ -1,15 +1,15 @@
-import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLBoolean, GraphQLNonNull, GraphQLList } from 'graphql'
+import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLList } from 'graphql'
+import { getCustomRepository } from 'typeorm-plus'
 import { resolveMeta } from '../../helpers'
 import DepartmentType from './Department'
 import DistrictType from './District'
-import { getCustomRepository } from 'typeorm-plus'
+import dataloader from 'dataloader'
+import { groupBy, map } from 'lodash'
+import { Districts as DistrictsEntity } from '../../entities/Districts'
 import {
     Departments as DepartmentsRepository,
-    Provinces as ProvincesRepository
+    Districts as DistrictsRepository
 } from '../../repositories'
-
-import dataloader from 'dataloader'
-import {groupBy, map} from 'lodash'
 
 const departmentsDL = new dataloader(
     async (keys) => {
@@ -17,6 +17,19 @@ const departmentsDL = new dataloader(
 
         return await getCustomRepository(DepartmentsRepository)
             .findByIds(departmentIds)
+    }
+)
+
+const DistrictsDL = new dataloader(
+    async (keys) => {
+        const provinceIds: number[] = Object.assign([], keys);
+
+        const data = await getCustomRepository(DistrictsRepository)
+            .findByProvinces(provinceIds)
+
+        const group = groupBy(data, (item: DistrictsEntity) => item.provinceId)
+
+        return map(provinceIds, (departmentId: number) => group[departmentId]);
     }
 )
 
@@ -29,14 +42,14 @@ export default new GraphQLObjectType({
         code: { type: GraphQLString },
         department: {
             type: DepartmentType,
-            async resolve({departmentId}:{departmentId: number}) {
-                return await departmentsDL.load(departmentId)
+            async resolve(source) {
+                return await departmentsDL.load(source.departmentId)
             }
         },
         districts: {
             type: new GraphQLList(DistrictType),
-            resolve() {
-
+            async resolve({ id }: { id: number }) {
+                return await DistrictsDL.load(id)
             }
         },
         createdAt: { type: GraphQLString, resolve: resolveMeta('createdAt') },

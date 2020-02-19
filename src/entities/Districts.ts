@@ -22,6 +22,9 @@ export class Districts extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
   id!: number
 
+  @Column('int4', {name: 'province_id'})
+  provinceId!: number
+
   @Column('character varying', { name: 'name', length: 80 })
   name!: string
 
