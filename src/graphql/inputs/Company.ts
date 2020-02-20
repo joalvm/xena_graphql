@@ -10,9 +10,9 @@ export default function(isSave = true) {
   return new GraphQLInputObjectType({
     name: `${prefix}CompanyInput`,
     fields: () => ({
-      name: { type: isSave ? GraphQLNonNull(GraphQLString) : GraphQLString },
-      businessName: { type: isSave ? GraphQLNonNull(GraphQLString) : GraphQLString },
-      ruc: { type: isSave ? GraphQLNonNull(GraphQLString) : GraphQLString },
+      name: { type: isSave ? new GraphQLNonNull(GraphQLString) : GraphQLString },
+      businessName: { type: isSave ? new GraphQLNonNull(GraphQLString) : GraphQLString },
+      ruc: { type: isSave ? new GraphQLNonNull(GraphQLString) : GraphQLString },
       squareIcon: { type: GraphQLString },
       rectangleIcon: { type: GraphQLString },
     }),

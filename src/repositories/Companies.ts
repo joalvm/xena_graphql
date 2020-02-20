@@ -3,9 +3,10 @@ import { Companies as CompaniesEntity } from '../entities/Companies'
 import { Users as UsersRepository } from '../repositories'
 import { Company } from '../interfaces'
 import { fill } from '../helpers'
+import Repository from './Repository'
 
 @EntityRepository(CompaniesEntity)
-export default class Companies extends AbstractRepository<CompaniesEntity> {
+export default class Companies extends Repository<CompaniesEntity> {
     constructor() {
         super()
     }
@@ -18,8 +19,8 @@ export default class Companies extends AbstractRepository<CompaniesEntity> {
         return await this.repository.findOneOrFail(id, { where: { deletedAt: null } })
     }
 
-    async save(userId: number, body: Company): Promise<CompaniesEntity> {
-        const userEntity = await getCustomRepository(UsersRepository).find(userId)
+    async save(body: Company): Promise<CompaniesEntity> {
+        const userEntity = await getCustomRepository(UsersRepository).find(this.session.userId)
 
         const companyEntity = this.repository.create()
 

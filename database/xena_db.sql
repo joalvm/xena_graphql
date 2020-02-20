@@ -94,7 +94,7 @@ CREATE TABLE "users_sessions" (
     "user_id" int4 NOT NULL,
     "token" varchar(180) NOT NULL,
     "expire" timestamptz(0) NOT NULL,
-    "ip" varchar(15) NOT NULL,
+    "ip" varchar(25) NOT NULL,
     "browser" varchar(25),
     "version" varchar(15),
     "platform" varchar(25),

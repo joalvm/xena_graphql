@@ -16,6 +16,3 @@ setMaxListeners(200);
     console.log('server in port ', config('app.port'))
   })
 })()
-
-
-

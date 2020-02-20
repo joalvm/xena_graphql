@@ -1,1 +1,2 @@
-export { default as UserMutation } from './UserMutation'
+export { default as Users } from './Users'
+export { default as Company } from './Company'

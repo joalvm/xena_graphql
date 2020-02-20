@@ -7,7 +7,8 @@ export default {
     listCompanies: {
         type: new GraphQLList(CompanyType),
         description: 'Lista de empresas aperturadas por el usuario',
-        resolve() {
+        resolve(_:any, __:any, ctx) {
+            console.log(ctx.user)
             return getCustomRepository(CompaniesRepository).all()
         },
     },
