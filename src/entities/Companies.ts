@@ -20,7 +20,7 @@ export class Companies extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "integer", name: "id" })
   id!: number;
 
-  @Column('int4', { name: "users_id" })
+  @Column('int4', { name: "user_id" })
   userId!: number;
 
   @Column("character varying", { name: "name", length: 80 })
@@ -37,14 +37,14 @@ export class Companies extends BaseEntity {
     nullable: true,
     length: 150
   })
-  squareIcon!: string | null;
+  squareIcon?: string;
 
   @Column("character varying", {
     name: "rectangle_icon",
     nullable: true,
     length: 150
   })
-  rectangleIcon!: string | null;
+  rectangleIcon?: string;
 
   @Column("timestamp with time zone", {
     name: "created_at",

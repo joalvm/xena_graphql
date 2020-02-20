@@ -11,10 +11,10 @@ export default function(isSave = true) {
     name: `${prefix}CompanyInput`,
     fields: () => ({
       name: { type: isSave ? GraphQLNonNull(GraphQLString) : GraphQLString },
-      business_name: { type: isSave ? GraphQLNonNull(GraphQLString) : GraphQLString },
+      businessName: { type: isSave ? GraphQLNonNull(GraphQLString) : GraphQLString },
       ruc: { type: isSave ? GraphQLNonNull(GraphQLString) : GraphQLString },
-      square_icon: { type: GraphQLString },
-      rectangle_icon: { type: GraphQLString },
+      squareIcon: { type: GraphQLString },
+      rectangleIcon: { type: GraphQLString },
     }),
   })
 }

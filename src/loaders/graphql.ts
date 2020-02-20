@@ -17,12 +17,14 @@ export default async (server: Application) => {
                     let code: number = 400
                     const origin = (<HttpError>err.originalError)
 
-                    if (origin.hasOwnProperty(code)) {
-                        code = origin.code
-                    } else {
-                        switch (origin.name) {
-                            case 'EntityNotFound': code = 404; break;
-                            default: code = 400; break;
+                    if (origin) {
+                        if (origin && origin.hasOwnProperty(code)) {
+                            code = origin.code
+                        } else {
+                            switch (origin.name) {
+                                case 'EntityNotFound': code = 404; break;
+                                default: code = 400; break;
+                            }
                         }
                     }
 

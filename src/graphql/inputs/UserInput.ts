@@ -11,7 +11,7 @@ export default function(isSave = true) {
       lastname: { type: isSave ? new GraphQLNonNull(GraphQLString) : GraphQLString },
       gender: { type: isSave ? new GraphQLNonNull(GenderEnum) : GenderEnum },
       email: { type: isSave ? new GraphQLNonNull(GraphQLString) : GraphQLString },
-      avatar_url: { type: GraphQLString },
+      avatarUrl: { type: GraphQLString },
       username: { type: isSave ? new GraphQLNonNull(GraphQLString) : GraphQLString },
       password: { type: GraphQLString },
       enabled: { type: GraphQLBoolean },

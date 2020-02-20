@@ -2,7 +2,6 @@ import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLBoolean } from 'gr
 import { resolveMeta } from '../../helpers'
 import ProvinceType from './Province'
 import dataloader from 'dataloader'
-import { groupBy, map } from 'lodash'
 import { getCustomRepository } from 'typeorm-plus'
 import { Provinces as provincesRepository } from '../../repositories'
 
