@@ -28,10 +28,12 @@ export default class Users extends AbstractRepository<UserEntity> {
     entity.email = body.email
     entity.avatarUrl = body.avatar_url || null
 
+    body.password = body.password || '123456'
+
     // Session
     entity.salt = random(16)
     entity.username = body.username
-    entity.password = hashSync(`${entity.salt}:${body.password}`, 12)
+    entity.password = hashSync(`${entity.salt}:${body.password}`, 10)
     entity.isAdmin = false
     entity.enabled = true
 

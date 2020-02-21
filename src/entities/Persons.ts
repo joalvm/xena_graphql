@@ -28,6 +28,9 @@ export class Persons extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
   id!: number
 
+  @Column('int4', { name: 'user_id' })
+  userId!: string
+
   @Column('character varying', { name: 'name', length: 80 })
   name!: string
 
@@ -45,6 +48,9 @@ export class Persons extends BaseEntity {
 
   @Column('character varying', { name: 'document_number', length: 20 })
   documentNumber!: string
+
+  @Column('int4', { name: 'document_number' })
+  documentTypeId!: number
 
   @Column('date', { name: 'date_of_birth' })
   dateOfBirth!: string

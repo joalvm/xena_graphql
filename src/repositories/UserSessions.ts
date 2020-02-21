@@ -47,12 +47,13 @@ export default class UserSessions extends AbstractRepository<UserSessionEntity> 
       {
         kid: entity.id,
         uid: user.id,
-        adm: user.isAdmin,
-        exp: expireIn,
+        adm: user.isAdmin
       },
       config('app.key'),
       !remember_me ? { expiresIn: expireIn } : {}
     )
+
+    entity.token = token
 
     await this.repository.update({ id: entity.id }, entity)
 
@@ -81,7 +82,7 @@ export default class UserSessions extends AbstractRepository<UserSessionEntity> 
   }
 
   private async generateSession(user: UserEntity, expireIn: number, agent: Object): Promise<UserSessionEntity> {
-    let entity = this.repository.create()
+    const entity = this.repository.create()
     const data = {
       ...agent,
       ...{

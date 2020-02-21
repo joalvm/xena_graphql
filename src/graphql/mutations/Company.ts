@@ -1,7 +1,6 @@
-import { GraphQLInt, GraphQLNonNull } from "graphql"
+import { GraphQLInt, GraphQLNonNull, GraphQLResolveInfo } from "graphql"
 import { Company as CompanyType } from "../types"
 import { Companies as CompaniesRepository } from "../../repositories"
-import { Company as ICompany } from "../../interfaces"
 import CompanyInput from "../inputs/Company"
 import { getCustomRepository } from "typeorm-plus"
 
@@ -14,8 +13,13 @@ export default {
                 type: new GraphQLNonNull(CompanyInput())
             }
         },
-        resolve(_: any, { body }: { body: ICompany }) {
-            return getCustomRepository(CompaniesRepository).save(body)
+        resolve(_: any, args: any, ctx:any, info: GraphQLResolveInfo) {
+            const repository = getCustomRepository(CompaniesRepository)
+
+            repository.setAuth(ctx.session, info.fieldName)
+            repository.enableCheckAutorization()
+
+            return repository.save(args.body)
         }
     },
     editCompany: {
@@ -30,9 +34,13 @@ export default {
                 type: CompanyInput(false)
             }
         },
-        resolve(_: any, { id, body }: { id: number, body: ICompany }) {
+        async resolve(_: any, args: any, ctx: any, info: GraphQLResolveInfo) {
             const repository = getCustomRepository(CompaniesRepository)
-            return repository.update(id, body)
+
+            repository.setAuth(ctx.session, info.fieldName)
+            repository.enableCheckAutorization()
+
+            return await repository.update(args.id, args.body)
         }
     }
 }

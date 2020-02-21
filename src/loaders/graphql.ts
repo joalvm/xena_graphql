@@ -1,26 +1,38 @@
 import { Application } from "express"
 import graphqlHttp from "express-graphql"
-import config from "../config"
-import Squema from "../graphql/Squema"
 import { GraphQLError } from 'graphql'
-import { ServerResponse, IncomingMessage } from "http"
+import { IncomingMessage, ServerResponse } from "http"
+import { verify } from 'jsonwebtoken'
+import config from "../config"
 import HttpError from "../exceptions/HttpError"
-import {verify} from 'jsonwebtoken'
+import Squema from "../graphql/Squema"
 
 export default async (server: Application) => {
 
     server.use((req, res, next) => {
-        const { authorization } = req.headers
+        const { authorization, company } = req.headers
 
         if (authorization) {
-            var parts = authorization.split(' ');
+            const parts = authorization.split(' ');
             if (parts.length == 2) {
                 const scheme = parts[0];
                 const credentials = parts[1];
 
                 if (/^Bearer$/i.test(scheme)) {
-                    const token = verify(credentials, config('app.key'))
-                    console.log(token)
+                    // eslint-disable-next-line
+                    const token: any = verify(credentials, config('app.key'))
+
+                    Object.defineProperty(req, 'session', {
+                        enumerable: true,
+                        configurable: true,
+                        value: {
+                            token: credentials,
+                            sessionId: token.kid,
+                            userId: token.uid,
+                            isAdmin: token.adm,
+                            currentCompany: company
+                        }
+                    })
                 } else {
                     return next(new HttpError('BadSchemaToken', 'Format is Authorization: Bearer [token]', 400));
                 }
@@ -36,7 +48,8 @@ export default async (server: Application) => {
         '/graphql',
         graphqlHttp((_: IncomingMessage, res: ServerResponse) => {
             const formatError = (err: GraphQLError) => {
-                let code: number = 400
+                let code = 400
+                // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
                 const origin = (<HttpError>err.originalError)
 
                 if (origin) {
@@ -65,12 +78,6 @@ export default async (server: Application) => {
             return ({
                 schema: Squema,
                 graphiql: config('app.env') == 'local',
-                rootValue: {
-                    session: (args, req) => {
-                        return { hola: "mundo" }
-                        console.dir("cuando te ejecutas", req)
-                    }
-                },
                 customFormatErrorFn: formatError
             })
         })

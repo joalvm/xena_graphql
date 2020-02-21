@@ -33,7 +33,7 @@ export default async (server: Application) => {
     });
 
     server.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-        res.status((typeof err.code == 'string' ? 401 : err.code) || 500);
+        res.status((typeof err.code == 'string' ? 401 : err.code) || 400);
         return res.json({
             errors: {
                 message: err.message,

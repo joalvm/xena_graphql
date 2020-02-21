@@ -1,5 +1,5 @@
 import { Person as PersonType } from "../types"
-import { GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLInputObjectType, GraphQLString } from "graphql"
+import { GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLInputObjectType, GraphQLResolveInfo } from "graphql"
 import { getCustomRepository } from "typeorm-plus"
 import { Persons as PersonsRepository } from "../../repositories"
 import { MaritalStatus, Gender } from "../enums"
@@ -9,9 +9,9 @@ import {
 } from "../../enums"
 
 interface PersonFilters {
-    maritalStatus: keyof typeof MaritalStatusEnum
-    genders: keyof typeof GendersEnum
-    documentTypeId: number
+    maritalStatus?: keyof typeof MaritalStatusEnum
+    genders?: keyof typeof GendersEnum
+    documentTypeId?: number
 }
 
 export default {
@@ -30,9 +30,13 @@ export default {
                 })
             }
         },
-        resolve(_:any, args: PersonFilters) {
-            console.log(args.maritalStatus)
-            return getCustomRepository(PersonsRepository).all()
+        resolve(_: any, args: any, ctx: any, info: GraphQLResolveInfo) {
+            const filters: PersonFilters = args.filters
+            const repository = getCustomRepository(PersonsRepository)
+
+            repository.setAuth(ctx.session, info.fieldName)
+
+            return repository.all(filters)
         }
     },
     findPerson: {
@@ -41,8 +45,12 @@ export default {
         args: {
             id: { type: new GraphQLNonNull(GraphQLInt) }
         },
-        resolve(_: any, { id }: { id: number }) {
-            return getCustomRepository(PersonsRepository).find(id)
+        resolve(_: any, args: any, ctx: any, info: GraphQLResolveInfo) {
+            const repository = getCustomRepository(PersonsRepository)
+
+            repository.setAuth(ctx.session, info.fieldName)
+
+            return repository.find(args.id)
         }
     }
 }
