@@ -53,8 +53,7 @@ export default async (server: Application) => {
                 const origin = (<HttpError>err.originalError)
 
                 if (origin) {
-                    console.log(origin)
-                    if (origin && origin.hasOwnProperty(code)) {
+                    if (Object.keys(origin).includes('code')) {
                         code = origin.code
                     } else {
                         switch (origin.name) {

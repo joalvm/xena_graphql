@@ -39,6 +39,7 @@ CREATE TABLE "companies" (
     "ruc" varchar(15) NOT NULL,
     "square_icon" varchar(150),
     "rectangle_icon" varchar(150),
+    "is_default" bool DEFAULT FALSE,
     "created_at" timestamptz(0) DEFAULT CURRENT_TIMESTAMP,
     "updated_at" timestamptz(0),
     "deleted_at" timestamptz(0),

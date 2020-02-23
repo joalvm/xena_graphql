@@ -11,9 +11,19 @@ export default class Companies extends Repository<CompaniesEntity> {
         super()
     }
 
-    async all(): Promise<CompaniesEntity[]> {
+    async all(isDefault?: boolean): Promise<CompaniesEntity[]> {
         await this.checkAuthorization()
-        return await this.repository.find({ where: { deletedAt: null } })
+
+        const where: Partial<CompaniesEntity> = {
+            deletedAt: null,
+            userId: this.session.userId
+        }
+
+        if (isDefault) {
+            where.isDefault = isDefault
+        }
+
+        return await this.repository.find({where})
     }
 
     async find(id: number): Promise<CompaniesEntity> {

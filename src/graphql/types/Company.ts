@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql'
+import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean } from 'graphql'
 import { resolveMeta } from '../../helpers'
 
 export default new GraphQLObjectType({
@@ -11,6 +11,7 @@ export default new GraphQLObjectType({
     ruc: { type: GraphQLString },
     squareIcon: { type: GraphQLString },
     rectangleIcon: { type: GraphQLString },
+    isDefault: { type: GraphQLBoolean },
     createdAt: { type: GraphQLString, resolve: resolveMeta('createdAt') },
     updatedAt: { type: GraphQLString, resolve: resolveMeta('updatedAt') },
   }),

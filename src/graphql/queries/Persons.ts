@@ -1,8 +1,10 @@
 import { Person as PersonType } from "../types"
-import { GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLInputObjectType, GraphQLResolveInfo } from "graphql"
+import { GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLResolveInfo } from "graphql"
 import { getCustomRepository } from "typeorm-plus"
 import { Persons as PersonsRepository } from "../../repositories"
-import { MaritalStatus, Gender } from "../enums"
+import PersonFiltersInput from '../inputs/PersonFilter'
+import PaginateInput from '../inputs/Paginate'
+import OrderingInput from '../inputs/Ordering'
 import {
     MaritalStatus as MaritalStatusEnum,
     Genders as GendersEnum
@@ -11,7 +13,9 @@ import {
 interface PersonFilters {
     maritalStatus?: keyof typeof MaritalStatusEnum
     genders?: keyof typeof GendersEnum
-    documentTypeId?: number
+    documentTypeId?: number,
+    limit?: number,
+    offset?: number
 }
 
 export default {
@@ -19,16 +23,9 @@ export default {
         type: new GraphQLList(PersonType),
         description: 'Lista general de personas',
         args: {
-            filters: {
-                type: new GraphQLInputObjectType({
-                    name: 'PersonFilterInput',
-                    fields: () => ({
-                        maritalStatus: { type: MaritalStatus },
-                        gender: { type: Gender },
-                        documentTypeId: { type: GraphQLInt }
-                    }),
-                })
-            }
+            filters: { type: PersonFiltersInput},
+            paginate: { type: PaginateInput },
+            ordering: { type: new GraphQLList(OrderingInput(PersonType)) }
         },
         resolve(_: any, args: any, ctx: any, info: GraphQLResolveInfo) {
             const filters: PersonFilters = args.filters

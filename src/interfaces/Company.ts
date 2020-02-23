@@ -3,5 +3,6 @@ export default interface Company {
     businessName: string,
     ruc: string,
     squareIcon?: string,
-    rectangleIcon?: string
+    rectangleIcon?: string,
+    isDefault?: boolean
 }

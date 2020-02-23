@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLInt, GraphQLString } from 'graphql'
 import { resolveMeta } from '../../helpers'
 import { Gender, MaritalStatus } from '../enums'
+import NodeInterface from '../interfaces/Node'
 
 const type: GraphQLObjectType = new GraphQLObjectType({
     name: 'Person',
@@ -20,6 +21,7 @@ const type: GraphQLObjectType = new GraphQLObjectType({
         createdAt: { type: GraphQLString, resolve: resolveMeta('createdAt') },
         updatedAt: { type: GraphQLString, resolve: resolveMeta('updatedAt') },
     }),
+    interfaces: [NodeInterface]
 })
 
 export default type
