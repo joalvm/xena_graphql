@@ -5,18 +5,7 @@ import { Persons as PersonsRepository } from "../../repositories"
 import PersonFiltersInput from '../inputs/PersonFilter'
 import PaginateInput from '../inputs/Paginate'
 import OrderingInput from '../inputs/Ordering'
-import {
-    MaritalStatus as MaritalStatusEnum,
-    Genders as GendersEnum
-} from "../../enums"
-
-interface PersonFilters {
-    maritalStatus?: keyof typeof MaritalStatusEnum
-    genders?: keyof typeof GendersEnum
-    documentTypeId?: number,
-    limit?: number,
-    offset?: number
-}
+import { PersonFilters, Pagination, Ordering } from '../../interfaces'
 
 export default {
     listPersons: {
@@ -28,12 +17,15 @@ export default {
             ordering: { type: new GraphQLList(OrderingInput(PersonType)) }
         },
         resolve(_: any, args: any, ctx: any, info: GraphQLResolveInfo) {
-            const filters: PersonFilters = args.filters
             const repository = getCustomRepository(PersonsRepository)
+
+            const filters: PersonFilters = args.filters
+            const pagination: Pagination = args.paginate
+            const ordering: Ordering[] = args.ordering
 
             repository.setAuth(ctx.session, info.fieldName)
 
-            return repository.all(filters)
+            return repository.all(filters, pagination, ordering)
         }
     },
     findPerson: {

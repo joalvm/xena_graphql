@@ -107,7 +107,7 @@ CREATE TABLE "users_sessions" (
 CREATE TABLE "document_types" (
     "id" serial4 NOT NULL,
     "name" varchar(35) NOT NULL,
-    "abbr" varchar(10) NOT NULL,
+    "abbr" varchar(25) NOT NULL,
     "length" numeric(3) NOT NULL,
     "exact_length" bool NOT NULL DEFAULT true,
     "created_at" timestamptz(0) DEFAULT CURRENT_TIMESTAMP,

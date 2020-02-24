@@ -29,7 +29,7 @@ export class Persons extends BaseEntity {
   id!: number
 
   @Column('int4', { name: 'user_id' })
-  userId!: string
+  userId!: number
 
   @Column('character varying', { name: 'name', length: 80 })
   name!: string

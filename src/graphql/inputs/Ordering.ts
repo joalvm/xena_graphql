@@ -16,8 +16,8 @@ export default function (parentFields: GraphQLObjectType, except: string[] = [])
     const modes = new GraphQLEnumType({
         name: `${parentFields.name}OrderingModes`,
         values: {
-            ASC: { value: 'asc' },
-            DESC: { value: 'desc' },
+            ASC: { value: 1 },
+            DESC: { value: -1 },
         }
     })
 
@@ -30,7 +30,7 @@ export default function (parentFields: GraphQLObjectType, except: string[] = [])
         name: `${parentFields.name}OrderingInput`,
         fields: () => ({
             field: { type: fields, defaultValue: 'id' },
-            mode: { type: modes, defaultValue: 'desc' }
+            mode: { type: modes, defaultValue: -1 }
         }),
     })
 }
