@@ -5,3 +5,5 @@ export { default as Department } from './Department'
 export { default as Province } from './Province'
 export { default as District } from './District'
 export { default as Person } from './Person'
+
+export { default as PageInfo } from './PageInfo'
