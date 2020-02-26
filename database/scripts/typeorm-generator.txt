@@ -1,0 +1,1 @@
+typeorm-model-generator -h localhost -d xena_db -u postgres -x postgres -e postgres -o ./entities --generateConstructor --relationIds

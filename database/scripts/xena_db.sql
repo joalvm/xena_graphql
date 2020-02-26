@@ -48,7 +48,9 @@ CREATE TABLE "companies" (
 
 CREATE TABLE "employees" (
     "id" serial4 NOT NULL,
+    "company_id" int4 NOT NULL,
     "person_id" int4 NOT NULL,
+    "code" varchar(15),
     "date_entry" date,
     "email" varchar(80),
     "company_position_id" int4 NOT NULL,
@@ -59,7 +61,7 @@ CREATE TABLE "employees" (
     "eps_affiliate" bool,
     "eps_plan" varchar(50),
     "eps_option" varchar(20),
-    "unionized" bool,
+    "affiliated" bool,
     "sctr_affiliate" bool,
     "ev_affiliate" bool,
     "boss" int4,
@@ -69,7 +71,7 @@ CREATE TABLE "employees" (
     PRIMARY KEY ("id") 
 );
 
-COMMENT ON COLUMN "employees"."ev_affiliation" IS 'essalud vida';
+COMMENT ON COLUMN "employees"."ev_affiliate" IS 'essalud vida';
 
 CREATE TABLE "users" (
     "id" serial4 NOT NULL,
@@ -219,28 +221,29 @@ CREATE TABLE "persons" (
 );
 
 
-ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_companies_1" FOREIGN KEY ("person_id") REFERENCES "companies" ("id");
 ALTER TABLE "users_sessions" ADD CONSTRAINT "fk_users_sessions_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "companies" ADD CONSTRAINT "fk_companies_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+
+ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_companies_1" FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
 ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_staff_area_1" FOREIGN KEY ("staff_area_id") REFERENCES "staff_area" ("id");
 ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_cost_centers_1" FOREIGN KEY ("cost_center_id") REFERENCES "cost_centers" ("id");
 ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_staff_division_1" FOREIGN KEY ("staff_division_id") REFERENCES "staff_division" ("id");
 ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_organizational_units_1" FOREIGN KEY ("organizational_unit_id") REFERENCES "organizational_units" ("id");
+ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_company_positions_1" FOREIGN KEY ("company_position_id") REFERENCES "company_positions" ("id");
+ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_persons_1" FOREIGN KEY ("person_id") REFERENCES "persons" ("id");
+
 ALTER TABLE "users_collaborators" ADD CONSTRAINT "fk_users_collaborators_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "users_collaborators" ADD CONSTRAINT "fk_users_collaborators_companies_1" FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
 ALTER TABLE "fishing_company_parameters" ADD CONSTRAINT "fk_fishing_company_parameters_employees_1" FOREIGN KEY ("employee_id") REFERENCES "employees" ("id");
 ALTER TABLE "fishing_company_parameters" ADD CONSTRAINT "fk_fishing_company_parameters_fishing_vessels_1" FOREIGN KEY ("fishing_vessel_id") REFERENCES "fishing_vessels" ("id");
 ALTER TABLE "fishing_vessels" ADD CONSTRAINT "fk_fishing_vessels_companies_1" FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
 ALTER TABLE "company_positions" ADD CONSTRAINT "fk_company_positions_companies_1" FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
-ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_company_positions_1" FOREIGN KEY ("company_position_id") REFERENCES "company_positions" ("id");
 ALTER TABLE "districts" ADD CONSTRAINT "fk_districts_provinces_1" FOREIGN KEY ("province_id") REFERENCES "provinces" ("id");
 ALTER TABLE "provinces" ADD CONSTRAINT "fk_provinces_departments_1" FOREIGN KEY ("department_id") REFERENCES "departments" ("id");
 ALTER TABLE "persons" ADD CONSTRAINT "fk_persons_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_persons_1" FOREIGN KEY ("person_id") REFERENCES "persons" ("id");
 ALTER TABLE "persons" ADD CONSTRAINT "fk_persons_districts_1" FOREIGN KEY ("district_id") REFERENCES "districts" ("id");
 ALTER TABLE "persons" ADD CONSTRAINT "fk_persons_document_types_1" FOREIGN KEY ("document_type_id") REFERENCES "document_types" ("id");
 ALTER TABLE "organizational_units" ADD CONSTRAINT "fk_organizational_units_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "cost_centers" ADD CONSTRAINT "fk_cost_centers_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "staff_area" ADD CONSTRAINT "fk_staff_area_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "staff_division" ADD CONSTRAINT "fk_staff_division_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
