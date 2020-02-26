@@ -1,7 +1,7 @@
 import { EntityRepository, FindManyOptions, Not } from 'typeorm-plus'
 import { Persons as PersonsEntity } from '../entities/Persons'
-import Repository from './Repository'
 import { PersonFilters, Pagination, Ordering } from '../interfaces'
+import Repository from './Repository'
 
 interface PersonPagination {
     edges: PersonsEntity[]|never[],
