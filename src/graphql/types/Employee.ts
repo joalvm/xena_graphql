@@ -3,7 +3,7 @@ import { getCustomRepository } from 'typeorm-plus'
 import { resolveMeta } from '../../helpers'
 import NodeInterface from '../interfaces/Node'
 import CompanyPositionType from './CompanyPosition'
-import EstaffAreaType from './EstaffArea'
+import StaffAreaType from './StaffArea'
 import CostCenterType from './CostCenter'
 import StaffDivisionType from './StaffDivision'
 import OrganizationalUnitType from './OrganizationalUnit'
@@ -36,7 +36,9 @@ const type: GraphQLObjectType = new GraphQLObjectType({
                 }
             }
         },
-        estaffArea: { type: EstaffAreaType },
+        estaffArea: {
+            type: StaffAreaType
+        },
         costCenter: { type: CostCenterType },
         staffDivision: { type: StaffDivisionType },
         organizationalUnit: { type: OrganizationalUnitType },
