@@ -10,6 +10,7 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    RelationId,
 } from 'typeorm-plus'
 import { Companies } from './Companies'
 import { Employees } from './Employees'
@@ -24,9 +25,6 @@ export class CompanyPositions extends BaseEntity {
 
     @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
     id!: number
-
-    @Column('int4', { name: 'company_id', nullable: false })
-    company_id!: number
 
     @Column('character varying', { name: 'name', nullable: true, length: 80 })
     name!: string | null
@@ -59,4 +57,9 @@ export class CompanyPositions extends BaseEntity {
 
     @OneToMany(() => Employees, employees => employees.companyPosition)
     employees!: Employees[]
+
+
+    @RelationId((companyPosition: CompanyPositions) => companyPosition.company)
+    @Column('int4', { name: 'company_id', nullable: false })
+    CompanyId!: number;
 }

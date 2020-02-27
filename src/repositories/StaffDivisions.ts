@@ -1,33 +1,35 @@
 import { EntityRepository, SelectQueryBuilder, Entity } from 'typeorm-plus'
-import { StaffArea as StaffAreaEntity } from '../entities/StaffArea'
+import { StaffDivision as StaffDivisionEntity } from '../entities/StaffDivision'
 import { Users as UsersEntity } from '../entities/Users'
 import Repository from './Repository'
-import { fill } from '../helpers';
 
-type Builder = SelectQueryBuilder<StaffAreaEntity>;
+type Builder = SelectQueryBuilder<StaffDivisionEntity>;
 
-@EntityRepository(StaffAreaEntity)
-export default class StaffArea extends Repository<StaffAreaEntity> {
+@EntityRepository(StaffDivisionEntity)
+export default class StaffDivisions extends Repository<StaffDivisionEntity> {
     constructor () {
         super()
     }
 
-    async all(): Promise<StaffAreaEntity[]> {
+    async all(): Promise<StaffDivisionEntity[]> {
         this.checkAuthorization()
         return await this.builder().getMany()
     }
 
-    async find(id: number): Promise<StaffAreaEntity> {
+    async find(id: number): Promise<StaffDivisionEntity> {
         this.checkAuthorization()
+
         return await this.repository.findOneOrFail({
             where: {
                 id: id,
-                userId: this.session.userId
+                user: {
+                    id: this.session.userId
+                }
             }
         })
     }
 
-    async save(body: StaffAreaEntity): Promise<StaffAreaEntity> {
+    async save(body: StaffDivisionEntity): Promise<StaffDivisionEntity> {
         this.checkAuthorization()
 
         const entity = this.repository.create({
@@ -38,12 +40,12 @@ export default class StaffArea extends Repository<StaffAreaEntity> {
         return await this.repository.save(entity)
     }
 
-    async update(id: number, body: Partial<StaffAreaEntity>): Promise<StaffAreaEntity> {
+    async update(id: number, body: Partial<StaffDivisionEntity>): Promise<StaffDivisionEntity> {
         this.checkAuthorization()
 
         await this.find(id)
 
-        await this.repository.update({ id: id }, new StaffAreaEntity(body))
+        await this.repository.update({ id: id }, new StaffDivisionEntity(body))
 
         return await this.find(id)
     }
@@ -58,7 +60,7 @@ export default class StaffArea extends Repository<StaffAreaEntity> {
 
     builder(): Builder {
         return this.filter(
-            this.manager.createQueryBuilder(StaffAreaEntity, 'sa')
+            this.manager.createQueryBuilder(StaffDivisionEntity, 'sa')
                 .innerJoin(UsersEntity, 'u', 'u.id = sa.user_id')
                 .where({
                     'sa.deletedAt': null,

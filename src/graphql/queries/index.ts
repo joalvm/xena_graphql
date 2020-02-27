@@ -7,3 +7,8 @@ export { default as Companies } from './Companies'
 export { default as Persons } from './Persons'
 export { default as Employees } from './Employees'
 export { default as StaffAreas } from './StaffAreas'
+export { default as StaffDivisions } from './StaffDivisions'
+export { default as OrganizationalUnits } from './OrganizationalUnits'
+export { default as CostCenters } from './CostCenters'
+export { default as CompanyPositions } from './CompanyPositions'
+

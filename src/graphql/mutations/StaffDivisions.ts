@@ -1,50 +1,50 @@
-import { StaffArea as StaffAreaType } from '../types'
 import { GraphQLNonNull, GraphQLResolveInfo, GraphQLInt, GraphQLBoolean } from 'graphql'
-import { Authentication } from '../../interfaces'
 import { getCustomRepository } from 'typeorm-plus'
-import { StaffArea as StaffAreaInput } from '../inputs'
-import { StaffAreas as StaffAreaRepository } from '../../repositories'
+import { Authentication } from '../../interfaces'
+import { StaffDivision as StaffDivisionType } from '../types'
+import { StaffDivision as StaffDivisionInput } from '../inputs'
+import { StaffDivisions as StaffDivisionRepository } from '../../repositories'
 
 export default {
-    newStaffArea: {
-        type: StaffAreaType,
-        description: 'Crear un nuevo Area del personal',
+    newStaffDivision: {
+        type: StaffDivisionType,
+        description: 'Crear una nueva Division del personal',
         args: {
             body: {
-                type: new GraphQLNonNull(StaffAreaInput())
+                type: new GraphQLNonNull(StaffDivisionInput())
             }
         },
         async resolve(_: any, args: any, { session }: { session: Authentication }, info: GraphQLResolveInfo) {
-            const repository = getCustomRepository(StaffAreaRepository)
+            const repository = getCustomRepository(StaffDivisionRepository)
 
             repository.setAuth(session, info.fieldName)
 
             return await repository.save(args.body)
         }
     },
-    editStaffArea: {
-        type: StaffAreaType,
-        description: 'Editar un nuevo Area del personal',
+    editStaffDivision: {
+        type: StaffDivisionType,
+        description: 'Editar una nueva Division de personal',
         args: {
             id: { type: new GraphQLNonNull(GraphQLInt) },
-            body: { type: new GraphQLNonNull(StaffAreaInput(false)) }
+            body: { type: new GraphQLNonNull(StaffDivisionInput(false)) }
         },
         async resolve(_: any, args: any, { session }: { session: Authentication }, info: GraphQLResolveInfo) {
-            const repository = getCustomRepository(StaffAreaRepository)
+            const repository = getCustomRepository(StaffDivisionRepository)
 
             repository.setAuth(session, info.fieldName)
 
             return await repository.update(args.id, args.body)
         }
     },
-    deleteStaffArea: {
+    deleteStaffDivision: {
         type: GraphQLBoolean,
-        description: 'Eliminar un nuevo Area del personal',
+        description: 'Eliminar una division de personal',
         args: {
             id: { type: new GraphQLNonNull(GraphQLInt) }
         },
         async resolve(_: any, args: any, { session }: { session: Authentication }, info: GraphQLResolveInfo) {
-            const repository = getCustomRepository(StaffAreaRepository)
+            const repository = getCustomRepository(StaffDivisionRepository)
 
             repository.setAuth(session, info.fieldName)
 
