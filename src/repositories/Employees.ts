@@ -1,13 +1,16 @@
-import Repository from './Repository';
-import {Employees as EmployeesEntity} from '../entities/Employees'
-import { Persons as PersonsEntity } from '../entities/Persons';
 import { EntityRepository, SelectQueryBuilder } from 'typeorm-plus';
+import { Persons as PersonsEntity } from '../entities/Persons';
+import { Employees as EmployeesEntity } from '../entities/Employees'
+import { Companies as CompaniesEntity } from '../entities/Companies';
+import { Users as UsersEntity } from '../entities/Users';
+import Repository from './Repository';
+import { NotFound } from '../exceptions';
 
-type SelectEmployee = SelectQueryBuilder<EmployeesEntity>;
+type Builder = SelectQueryBuilder<EmployeesEntity>;
 
 @EntityRepository(EmployeesEntity)
 export default class Employees extends Repository<EmployeesEntity> {
-    constructor() {
+    constructor () {
         super()
     }
 
@@ -17,19 +20,38 @@ export default class Employees extends Repository<EmployeesEntity> {
         return await this.builder().getMany()
     }
 
-    builder(): SelectEmployee {
+    async find(id: number): Promise<EmployeesEntity> {
+        this.checkAuthorization()
+
+        const entity = await this.builder().andWhere('e.id = :id', { id: id }).getOne()
+
+        if (entity === undefined) throw new NotFound('Employee Not Found')
+
+        return new EmployeesEntity(entity)
+    }
+
+    builder(): Builder {
         return this.filter(
-            this.manager
-                .createQueryBuilder(EmployeesEntity, 'e')
+            this.manager.createQueryBuilder(EmployeesEntity, 'e')
                 .innerJoin(PersonsEntity, 'p', 'p.id = e.person_id')
+                .innerJoin(UsersEntity, 'u', 'u.id = p.user_id')
+                .innerJoin(CompaniesEntity, 'c', 'c.id = e.company_id')
         )
     }
 
-    filter(builder: SelectEmployee): SelectEmployee {
-        builder.where('p.deleted_at IS NULL')
+    filter(builder: Builder): Builder {
 
-        if (this.session.userId) {
-            builder.andWhere('p.user_id = :user_id', {user_id: this.session.userId})
+        builder.where('p.deleted_at IS NULL')
+        builder.andWhere('c.deleted_at IS NULL')
+
+        builder.andWhere('u.id = :userId', {
+            userId: this.session.userId
+        })
+
+        if (this.session.currentCompany) {
+            builder.andWhere('c.id = :companyId', {
+                companyId: this.session.currentCompany
+            })
         }
 
         return builder;

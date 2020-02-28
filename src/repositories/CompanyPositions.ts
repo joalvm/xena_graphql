@@ -24,15 +24,15 @@ export default class CompanyPositions extends Repository<CompanyPositionsEntity>
         return await this.repository.findOneOrFail({
             join: { alias: 'cp', innerJoin: { company: 'cp.company' } },
             where: Object.assign(
-                {'cp.id': this.session.userId},
+                { 'cp.user_id': this.session.userId, id: id },
                 this.session.currentCompany
-                    ? {'company.id': this.session.currentCompany}
+                    ? { 'company.id': this.session.currentCompany }
                     : {}
             )
         })
     }
 
-    async save(body: {name: string, company: number}): Promise<CompanyPositionsEntity> {
+    async save(body: { name: string, company: number }): Promise<CompanyPositionsEntity> {
         this.checkAuthorization()
 
         const company = await getCustomRepository(CompaniesRepository).find(
@@ -41,7 +41,7 @@ export default class CompanyPositions extends Repository<CompanyPositionsEntity>
 
         const entity = this.repository.create({
             ...body,
-            ...{company}
+            ...{ company }
         });
 
         return await this.repository.save(entity)
@@ -68,7 +68,7 @@ export default class CompanyPositions extends Repository<CompanyPositionsEntity>
     builder(): Builder {
         return this.filter(
             this.manager.createQueryBuilder(CompanyPositionsEntity, 'cp')
-                .innerJoin(CompaniesEntity, 'c', 'cp.company_id = c.id')
+                .innerJoin(CompaniesEntity, 'c', 'c.id = cp.company_id')
                 .where({
                     'cp.deletedAt': null,
                     'c.deletedAt': null
@@ -77,12 +77,13 @@ export default class CompanyPositions extends Repository<CompanyPositionsEntity>
     }
 
     private filter(builder: Builder): Builder {
-        builder.andWhere('c.user_id = :userId', {userId: this.session.sessionId})
+
+        if (this.session.userId) {
+            builder.andWhere('c.user_id = :userId', { userId: this.session.sessionId })
+        }
 
         if (this.session.currentCompany) {
-            builder.andWhere('c.id = :companyId', {
-                companyId: this.session.currentCompany
-            })
+            builder.andWhere('c.id = :companyId', { companyId: this.session.currentCompany })
         }
 
         return builder

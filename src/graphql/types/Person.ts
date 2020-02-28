@@ -3,7 +3,7 @@ import { resolveMeta } from '../../helpers'
 import { Gender, MaritalStatus } from '../enums'
 import NodeInterface from '../interfaces/Node'
 
-const type: GraphQLObjectType = new GraphQLObjectType({
+export default new GraphQLObjectType({
     name: 'Person',
     description: 'Personas registradas',
     fields: () => ({
@@ -24,4 +24,3 @@ const type: GraphQLObjectType = new GraphQLObjectType({
     interfaces: [NodeInterface]
 })
 
-export default type

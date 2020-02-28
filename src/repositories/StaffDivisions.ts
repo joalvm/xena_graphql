@@ -1,4 +1,4 @@
-import { EntityRepository, SelectQueryBuilder, Entity } from 'typeorm-plus'
+import { EntityRepository, SelectQueryBuilder } from 'typeorm-plus'
 import { StaffDivision as StaffDivisionEntity } from '../entities/StaffDivision'
 import { Users as UsersEntity } from '../entities/Users'
 import Repository from './Repository'
@@ -71,7 +71,7 @@ export default class StaffDivisions extends Repository<StaffDivisionEntity> {
 
     private filter(builder: Builder): Builder {
 
-        if (this.session.sessionId) {
+        if (this.session.userId) {
             builder.andWhere('u.id = :userId', { userId: this.session.userId })
         }
 

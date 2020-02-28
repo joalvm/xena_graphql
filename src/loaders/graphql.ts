@@ -30,7 +30,7 @@ export default async (server: Application) => {
                             sessionId: token.kid,
                             userId: token.uid,
                             isAdmin: token.adm,
-                            currentCompany: company
+                            currentCompany: parseInt(company as string)
                         }
                     })
                 } else {

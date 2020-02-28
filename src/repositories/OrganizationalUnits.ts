@@ -13,11 +13,13 @@ export default class OrganizationalUnits extends Repository<OrganizationalUnitsE
 
     async all(): Promise<OrganizationalUnitsEntity[]> {
         this.checkAuthorization()
+
         return await this.builder().getMany()
     }
 
     async find(id: number): Promise<OrganizationalUnitsEntity> {
         this.checkAuthorization()
+
         return await this.repository.findOneOrFail({
             where: {
                 id: id,
@@ -68,7 +70,7 @@ export default class OrganizationalUnits extends Repository<OrganizationalUnitsE
 
     private filter(builder: Builder): Builder {
 
-        if (this.session.sessionId) {
+        if (this.session.userId) {
             builder.andWhere('u.id = :userId', { userId: this.session.userId })
         }
 
