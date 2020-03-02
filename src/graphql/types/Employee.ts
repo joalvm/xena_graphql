@@ -7,6 +7,8 @@ import StaffAreaType from './StaffArea'
 import CostCenterType from './CostCenter'
 import StaffDivisionType from './StaffDivision'
 import OrganizationalUnitType from './OrganizationalUnit'
+import CompanyType from './Company'
+
 import dataloader from 'dataloader'
 import PersonType from './Person'
 import {
@@ -14,7 +16,8 @@ import {
     StaffAreas as StaffAreasRepository,
     CostCenters as CostCentersRepository,
     OrganizationalUnits as OrganizationalUnitsRepository,
-    Persons as PersonsRepository
+    Persons as PersonsRepository,
+    Companies as CompaniesRepository
 } from '../../repositories'
 import { Authentication } from '../../interfaces'
 
@@ -78,6 +81,20 @@ const personDL = (session: Authentication, fieldName: string) => {
     )
 }
 
+const companyDL = (session: Authentication, fieldName: string) => {
+    console.log(fieldName)
+    return new dataloader(
+        async (keys) => {
+            const companyPositionIds: number[] = Object.assign([], keys);
+            const repository = getCustomRepository(CompaniesRepository);
+
+            repository.setAuth(session, fieldName)
+
+            return await repository.builder().andWhereInIds(companyPositionIds).getMany()
+        }
+    )
+}
+
 const type: GraphQLObjectType = new GraphQLObjectType({
     name: 'Employee',
     description: 'Empleados registrados',
@@ -88,6 +105,14 @@ const type: GraphQLObjectType = new GraphQLObjectType({
             async resolve(root: any, args:any, {session}:{session: Authentication}, info: GraphQLResolveInfo) {
                 if (root.personId) {
                     return await personDL(session, info.fieldName).load(root.personId)
+                }
+            }
+        },
+        company: {
+            type: CompanyType,
+            async resolve(root: any, args:any, {session}:{session: Authentication}, info: GraphQLResolveInfo) {
+                if (root.companyId) {
+                    return await companyDL(session, info.fieldName).load(root.companyId)
                 }
             }
         },
@@ -103,8 +128,8 @@ const type: GraphQLObjectType = new GraphQLObjectType({
             type: CompanyPositionType,
             description: 'Posición en la Compañia',
             async resolve(root: any) {
-                if (root.companyPosition) {
-                    return await companyPositionDL.load(root.companyPosition)
+                if (root.companyPositionId) {
+                    return await companyPositionDL.load(root.companyPositionId)
                 }
             }
         },
@@ -112,8 +137,8 @@ const type: GraphQLObjectType = new GraphQLObjectType({
             type: StaffAreaType,
             description: 'Area del Personal',
             async resolve(root: any) {
-                if (root.staffArea) {
-                    return await staffAreaDL.load(root.staffArea)
+                if (root.staffAreaId) {
+                    return await staffAreaDL.load(root.staffAreaId)
                 }
             }
         },
@@ -121,8 +146,8 @@ const type: GraphQLObjectType = new GraphQLObjectType({
             type: CostCenterType,
             description: 'Centro de Costos',
             async resolve(root: any) {
-                if (root.costCenter) {
-                    return await costCenterDL.load(root.costCenter)
+                if (root.costCenterId) {
+                    return await costCenterDL.load(root.costCenterId)
                 }
             }
         },
@@ -130,8 +155,8 @@ const type: GraphQLObjectType = new GraphQLObjectType({
             type: StaffDivisionType,
             description: 'División de Personal',
             async resolve(root: any) {
-                if (root.staffDivision) {
-                    return await staffDivisionDL.load(root.staffDivision)
+                if (root.staffDivisionId) {
+                    return await staffDivisionDL.load(root.staffDivisionId)
                 }
             }
         },
@@ -139,8 +164,8 @@ const type: GraphQLObjectType = new GraphQLObjectType({
             type: OrganizationalUnitType,
             description: 'Unidad Organizativa',
             async resolve(root: any) {
-                if (root.staffDivision) {
-                    return await organizationalUnitDL.load(root.organizationalUnit)
+                if (root.staffDivisionId) {
+                    return await organizationalUnitDL.load(root.organizationalUnitId)
                 }
             }
         },

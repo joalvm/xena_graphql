@@ -1,5 +1,0 @@
-export { default as StaffArea } from './StaffArea'
-export { default as StaffDivision } from './StaffDivision'
-export { default as OrganizationalUnit } from './OrganizationalUnit'
-export { default as CostCenter } from './CostCenter'
-export { default as CompanyPosition } from './CompanyPosition'

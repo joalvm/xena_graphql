@@ -10,6 +10,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  RelationId,
 } from 'typeorm-plus'
 import { Employees } from './Employees'
 import { Districts } from './Districts'
@@ -49,9 +50,6 @@ export class Persons extends BaseEntity {
   @Column('character varying', { name: 'document_number', length: 20 })
   documentNumber!: string
 
-  @Column('int4', { name: 'document_number' })
-  documentTypeId!: number
-
   @Column('date', { name: 'date_of_birth' })
   dateOfBirth!: string
 
@@ -66,6 +64,9 @@ export class Persons extends BaseEntity {
 
   @Column('character varying', { name: 'email', nullable: true, length: 80 })
   email!: string | null
+
+  @Column('character varying', { name: 'avatar_url', nullable: true, length: 150 })
+  avatarUrl!: string | null
 
   @CreateDateColumn({
     type: 'timestamp with time zone',
@@ -115,4 +116,7 @@ export class Persons extends BaseEntity {
   )
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user!: Users
+
+  @RelationId((person: Persons) => person.documentType)
+  documentTypeId!: number;
 }

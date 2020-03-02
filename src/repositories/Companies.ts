@@ -1,9 +1,12 @@
-import { EntityRepository, In, getCustomRepository } from 'typeorm-plus'
+import { EntityRepository, In, getCustomRepository, SelectQueryBuilder } from 'typeorm-plus'
 import { Companies as CompaniesEntity } from '../entities/Companies'
 import { Users as UsersRepository } from '../repositories'
 import { Company } from '../interfaces'
 import { fill } from '../helpers'
 import Repository from './Repository'
+import { Users as UsersEntity } from '../entities/Users'
+
+type Builder = SelectQueryBuilder<CompaniesEntity>;
 
 @EntityRepository(CompaniesEntity)
 export default class Companies extends Repository<CompaniesEntity> {
@@ -72,5 +75,24 @@ export default class Companies extends Repository<CompaniesEntity> {
         return await this.repository.find({
             where: { userId: In(userIds), deletedAt: null },
         })
+    }
+
+    builder(): Builder {
+        return this.filter(
+            this.manager.createQueryBuilder(CompaniesEntity, 'c')
+                .innerJoin(UsersEntity, 'u', 'u.id = c.user_id')
+                .where({
+                    'c.deleted_at': null,
+                    'u.deleted_at': null
+                })
+        )
+    }
+
+    filter(builder: Builder): Builder {
+        if (this.session.userId) {
+            builder.andWhere('u.id=:userId', {userId: this.session.userId})
+        }
+
+        return builder
     }
 }
