@@ -79,7 +79,7 @@ export default class CompanyPositions extends Repository<CompanyPositionsEntity>
     private filter(builder: Builder): Builder {
 
         if (this.session.userId) {
-            builder.andWhere('c.user_id = :userId', { userId: this.session.sessionId })
+            builder.andWhere('c.user_id = :userId', { userId: this.session.userId })
         }
 
         if (this.session.currentCompany) {

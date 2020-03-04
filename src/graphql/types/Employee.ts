@@ -1,5 +1,6 @@
 import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLBoolean, GraphQLResolveInfo } from 'graphql'
 import { getCustomRepository } from 'typeorm-plus'
+import { Authentication } from '../../interfaces'
 import { resolveMeta } from '../../helpers'
 import NodeInterface from '../interfaces/Node'
 import CompanyPositionType from './CompanyPosition'
@@ -8,7 +9,6 @@ import CostCenterType from './CostCenter'
 import StaffDivisionType from './StaffDivision'
 import OrganizationalUnitType from './OrganizationalUnit'
 import CompanyType from './Company'
-
 import dataloader from 'dataloader'
 import PersonType from './Person'
 import {
@@ -19,8 +19,6 @@ import {
     Persons as PersonsRepository,
     Companies as CompaniesRepository
 } from '../../repositories'
-import { Authentication } from '../../interfaces'
-
 
 const companyPositionDL = new dataloader(
     async (keys) => {
@@ -68,7 +66,6 @@ const organizationalUnitDL = new dataloader(
 )
 
 const personDL = (session: Authentication, fieldName: string) => {
-    console.log(fieldName)
     return new dataloader(
         async (keys) => {
             const companyPositionIds: number[] = Object.assign([], keys);
@@ -82,7 +79,6 @@ const personDL = (session: Authentication, fieldName: string) => {
 }
 
 const companyDL = (session: Authentication, fieldName: string) => {
-    console.log(fieldName)
     return new dataloader(
         async (keys) => {
             const companyPositionIds: number[] = Object.assign([], keys);
@@ -100,6 +96,7 @@ const type: GraphQLObjectType = new GraphQLObjectType({
     description: 'Empleados registrados',
     fields: () => ({
         id: { type: GraphQLInt },
+        code: {type: GraphQLString },
         person: {
             type: PersonType,
             async resolve(root: any, args:any, {session}:{session: Authentication}, info: GraphQLResolveInfo) {
