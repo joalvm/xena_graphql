@@ -2,14 +2,14 @@
   "name": "xena",
   "version": "1.0.0",
   "description": "",
+  "author": "Alejandro Vilchez <joalvm@gmail.com>",
   "main": "src/server.ts",
   "scripts": {
     "build": "tsc",
-    "start": "babel-node -r ./tsconfig-paths-bootstrap.js .",
+    "start": "ts-node -r ./tsconfig-paths-bootstrap.js .",
     "start:dev": "babel-node -r dotenv/config -r tsconfig-paths/register -r ts-node/register ./src/server.ts",
     "dev": "nodemon"
   },
-  "author": "Alejandro Vilchez <joalvm@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^3.0.8",
@@ -37,6 +37,7 @@
     "@babel/core": "^7.8.4",
     "@babel/node": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
+    "@babel/preset-typescript": "^7.9.0",
     "@types/bcrypt": "^3.0.0",
     "@types/cors": "^2.8.6",
     "@types/errorhandler": "0.0.32",

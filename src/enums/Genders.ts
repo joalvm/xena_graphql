@@ -1,4 +1,6 @@
-export enum Genders {
-    MALE='Masculino',
-    FEMALE='Femenino'
+enum Genders {
+    MALE = 'Masculino',
+    FEMALE = 'Femenino',
 }
+
+export default Genders

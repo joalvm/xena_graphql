@@ -6,4 +6,5 @@ const baseUrl = './build';
 tsConfigPaths.register({
   baseUrl,
   paths: tsConfig.compilerOptions.paths,
+  mainFields: ['server.js']
 });
